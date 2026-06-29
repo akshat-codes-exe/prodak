@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Geometric Balance Theme Tokens */
+  --color-forest-darkest: #121211;
+  --color-forest-dark: #121211;
+  --color-forest-card: #181816;
+  --color-forest-border: #2c2c2a;
+  --color-forest-light: #232321;
+  
+  --color-earth-sand: #a3ad9a;
+  --color-earth-sage: #888880;
+  --color-earth-clay: #d4a373;
+  --color-earth-moss: #666660;
+  --color-earth-amber: #d4a373;
+  
+  --color-geo-bg: #121211;
+  --color-geo-card: #181816;
+  --color-geo-panel: #1c1c1a;
+  --color-geo-border: #2c2c2a;
+  --color-geo-text: #e5e5e0;
+  --color-geo-secondary: #888880;
+  --color-geo-muted: #666660;
+  --color-geo-sage: #a3ad9a;
+  --color-geo-clay: #d4a373;
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Base custom styles to ensure a perfectly smooth experience */
+body {
+  background-color: var(--color-geo-bg);
+  color: var(--color-geo-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Custom thin scrollbar with geometric aesthetic */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-geo-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-geo-border);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-geo-sage);
+}
+
+/* Focus and inputs styling */
+input, textarea, select {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--color-geo-bg) !important;
+  color: var(--color-geo-text) !important;
+  border-color: var(--color-geo-border) !important;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-geo-sage) !important;
+  box-shadow: 0 0 0 1px var(--color-geo-sage) !important;
+}

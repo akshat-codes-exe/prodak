@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "Represents a single user-authored task or action item",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the task"
+        },
+        "description": {
+          "type": "string",
+          "description": "The detailed notes/description of the task"
+        },
+        "deadline": {
+          "type": "string",
+          "description": "ISO datetime string indicating when the task is due"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Priority level"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category label for task grouping"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["todo", "in_progress", "completed"],
+          "description": "The completion status"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The user ID of the owner"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last modification"
+        },
+        "estimatedMinutes": {
+          "type": "integer",
+          "description": "Estimated time in minutes to complete"
+        },
+        "subtasks": {
+          "type": "array",
+          "description": "Bounded list of subtasks"
+        },
+        "position": {
+          "type": "integer",
+          "description": "Manual custom drag-and-drop sort order position"
+        },
+        "recurrence": {
+          "type": "string",
+          "enum": ["none", "daily", "weekly", "3_days_a_week", "monthly"],
+          "description": "Recurrence cycle/interval of the task"
+        },
+        "completedOccurrences": {
+          "type": "integer",
+          "description": "Counter for completed occurrences of a recurring task"
+        }
+      },
+      "required": ["title", "priority", "category", "status", "userId", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Collection of tasks owned by individual users for real-time synchronization"
+    }
+  }
+}

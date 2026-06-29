@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud_firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Checks if the user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper: Validates a safe, alphanumeric ID format
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 64 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Helper: Validates task document contents
+    function isValidTask(task) {
+      return task.keys().hasAll(['title', 'priority', 'category', 'status', 'userId', 'createdAt', 'updatedAt'])
+        && task.keys().size() <= 15
+        && task.title is string && task.title.size() > 0 && task.title.size() <= 200
+        && task.priority in ['low', 'medium', 'high']
+        && task.status in ['todo', 'in_progress', 'completed']
+        && task.category is string && task.category.size() <= 50
+        && task.userId == request.auth.uid
+        && task.createdAt is string
+        && task.updatedAt is string
+        && (task.get('description', '') is string && task.get('description', '').size() <= 2000)
+        && (task.get('deadline', '') is string && task.get('deadline', '').size() <= 100)
+        && (task.get('estimatedMinutes', 0) is int && task.get('estimatedMinutes', 0) >= 0 && task.get('estimatedMinutes', 0) <= 10000)
+        && (task.get('subtasks', []) is list && task.get('subtasks', []).size() <= 10)
+        && (task.get('position', 0) is int)
+        && (task.get('recurrence', 'none') is string && task.get('recurrence', 'none') in ['none', 'daily', 'weekly', '3_days_a_week', 'monthly'])
+        && (task.get('completedOccurrences', 0) is int);
+    }
+
+    // Task collection match block
+    match /tasks/{taskId} {
+      allow create: if isSignedIn()
+        && isValidId(taskId)
+        && isValidTask(request.resource.data);
+
+      allow read: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+
+      allow update: if isSignedIn()
+        && resource.data.userId == request.auth.uid
+        && isValidTask(request.resource.data)
+        // Prevent altering original creator's userId
+        && request.resource.data.userId == resource.data.userId
+        // Prevent altering the creation date
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if isSignedIn()
+        && resource.data.userId == request.auth.uid;
+    }
+  }
+}
